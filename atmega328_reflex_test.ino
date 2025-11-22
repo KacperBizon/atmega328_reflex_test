@@ -23,17 +23,18 @@ const int timebetween = 1000;             //time between games
 uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
 uint8_t blank[] = {0x00, 0xff, 0x00, 0x00};
 
-void between(int k)
+void active_delay(int time)
 {
-  while (k)
+  digitalWrite(led_stop, HIGH);
+  while (time)
   {
-    //odejmowanie czasu
     if ((digitalRead(switch1) == LOW) || (digitalRead(switch2) == LOW))
     {
       delay(1);
-      k--;
+      time--;
     }
   }
+  digitalWrite(led_stop, LOW);
 }
 
 void blinkMainLEDs()
@@ -48,6 +49,20 @@ void blinkMainLEDs()
     digitalWrite(led_p2, LOW);
     delay(300);
   }
+}
+
+void updateDisplay(int value)
+{
+  data[3] = display.encodeDigit(value % 10);
+  value /= 10;
+  data[2] = display.encodeDigit(value % 10);
+  value /= 10;
+  data[1] = display.encodeDigit(value % 10);
+  value /= 10;
+  data[0] = display.encodeDigit(value % 10);
+
+  display.setBrightness(0x01);
+  display.setSegments(data);
 }
 
 void setup() 
@@ -83,13 +98,14 @@ void loop()
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
 
-  int randNumber = random(3000, 7000);
-  int currtime = 0;
-  int play = 1;
+  int timeToStart = random(3200, 7200);
+  int reactionTime = 0;
+  bool stop = 0;
 
-  for (randNumber; randNumber > 0; randNumber--)
+  while(timeToStart)
   {
     delay(1);
+    timeToStart--;
 
     if ((digitalRead(switch1) == LOW) || (digitalRead(switch2) == LOW))
     {
@@ -102,13 +118,13 @@ void loop()
 
       digitalWrite(led_stop, HIGH);
 
-      play = 0;
-      randNumber = 0;
-      between(timebetween);
+      stop = 1;
+      timeToStart = 0;
+      active_delay(timebetween);
     }
   }
 
-  while (play)
+  while (!stop)
   {
     digitalWrite(led_p1, HIGH);
     digitalWrite(led_p2, HIGH);
@@ -118,17 +134,9 @@ void loop()
       digitalWrite(led1, HIGH);
       digitalWrite(led2, LOW);
 
-      data[3] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[2] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[1] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[0] = display.encodeDigit(currtime % 10);
-      display.setBrightness(0x01);
-      display.setSegments(data);
+      updateDisplay(reactionTime);
 
-      between(timebetween);
+      active_delay(timebetween);
       break;
     }
 
@@ -137,33 +145,22 @@ void loop()
       digitalWrite(led2, HIGH);
       digitalWrite(led1, LOW);
 
-      data[3] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[2] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[1] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[0] = display.encodeDigit(currtime % 10);
-      display.setBrightness(0x01);
-      display.setSegments(data);
+      updateDisplay(reactionTime);
 
-      between(timebetween);
+      active_delay(timebetween);
       break;
     }
-    if (currtime > 9999)
+    if (reactionTime > 9999)
     {
-      data[3] = display.encodeDigit(9);
-      data[2] = display.encodeDigit(9);
-      data[1] = display.encodeDigit(9);
-      data[0] = display.encodeDigit(9);
-      display.setSegments(data);
+      updateDisplay(9999);
+
       digitalWrite(led1, LOW);
       digitalWrite(led2, LOW);
 
-      between(timebetween);
+      active_delay(timebetween);
       break;
     }
     delay(1);
-    currtime++;
+    reactionTime++;
   }
 }
