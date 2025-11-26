@@ -21,19 +21,19 @@ const byte blink_count = 5;               //initial blinks
 const int timebetween = 1000;             //time between games
 
 uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
-uint8_t blank[] = {0x00, 0xff, 0x00, 0x00};
 
-void between(int k)
+void active_delay(int time)
 {
-  while (k)
+  digitalWrite(led_stop, HIGH);
+  while (time)
   {
-    //odejmowanie czasu
-    if ((digitalRead(switch1) == LOW) || (digitalRead(switch2) == LOW))
+    if ((digitalRead(switch_p1) == LOW) || (digitalRead(switch_p2) == LOW))
     {
       delay(1);
-      k--;
+      time--;
     }
   }
+  digitalWrite(led_stop, LOW);
 }
 
 void blinkMainLEDs()
@@ -50,9 +50,38 @@ void blinkMainLEDs()
   }
 }
 
+void updateDisplay(int value, int scoreP1, int scoreP2)
+{
+  for (int i = 0; i < scoreP1; i++)
+  {
+    digitalWrite(led_score_p1[i], HIGH);
+  }
+
+  for (int i = 0; i < scoreP2; i++)
+  {
+    digitalWrite(led_score_p2[i], HIGH);
+  }
+
+  if(value == -1)
+  {
+    display.clear();
+    return;
+  }
+
+  data[3] = display.encodeDigit(value % 10);
+  value /= 10;
+  data[2] = display.encodeDigit(value % 10);
+  value /= 10;
+  data[1] = display.encodeDigit(value % 10);
+  value /= 10;
+  data[0] = display.encodeDigit(value % 10);
+
+  display.setBrightness(0x01);
+  display.setSegments(data);
+}
+
 void setup() 
 {
-  display.clear();
   randomSeed(analogRead(2));
 
   pinMode(switch_p1, INPUT_PULLUP);
@@ -74,96 +103,120 @@ void setup()
   pinMode(led_avg, OUTPUT);
   pinMode(led_stop, OUTPUT);
 
-  blinkMainLEDS();
+  blinkMainLEDs();
 }
 
 void loop()
 {
-  display.clear();
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
+  int p1Total = 0;
+  int p2Total = 0;
 
-  int randNumber = random(3000, 7000);
-  int currtime = 0;
-  int play = 1;
+  byte scoreP1 = 0;
+  byte scoreP2 = 0;
+  updateDisplay(-1, scoreP1, scoreP2);
 
-  for (randNumber; randNumber > 0; randNumber--)
+  while(scoreP1 <= 2 || scoreP2 <=2)
   {
-    delay(1);
+    display.clear();
+    digitalWrite(led_p1, LOW);
+    digitalWrite(led_p2, LOW);
 
-    if ((digitalRead(switch1) == LOW) || (digitalRead(switch2) == LOW))
+    int timeToStart = random(3200, 7200);
+    int reactionTime = 0;
+    bool stop = 0;
+    bool finished_players[2]={0, 0};
+
+    while(timeToStart)
     {
-      data[3] = display.encodeDigit(15);
-      data[2] = display.encodeDigit(15);
-      data[1] = display.encodeDigit(15);
-      data[0] = display.encodeDigit(15);
-      display.setBrightness(0x01);
-      display.setSegments(data);
+      delay(1);
+      timeToStart--;
 
-      digitalWrite(led_stop, HIGH);
+      if ((digitalRead(switch_p1) == LOW) || (digitalRead(switch_p2) == LOW))
+      {
+        data[3] = display.encodeDigit(15);
+        data[2] = display.encodeDigit(15);
+        data[1] = display.encodeDigit(15);
+        data[0] = display.encodeDigit(15);
+        display.setBrightness(0x01);
+        display.setSegments(data);
 
-      play = 0;
-      randNumber = 0;
-      between(timebetween);
+        digitalWrite(led_stop, HIGH);
+
+        stop = 1;
+        timeToStart = 0;
+        active_delay(timebetween);
+      }
     }
-  }
 
-  while (play)
-  {
     digitalWrite(led_p1, HIGH);
     digitalWrite(led_p2, HIGH);
 
-    if (digitalRead(switch1) == LOW)
+    //main reflex test
+    while (!stop)
     {
-      digitalWrite(led1, HIGH);
-      digitalWrite(led2, LOW);
+      if (digitalRead(switch_p1) == LOW && finished_players[0] == 0)
+      {
+        if(finished_players[1] == 0)
+        {
+          digitalWrite(led_p1, HIGH);
+          digitalWrite(led_p2, LOW);
+          updateDisplay(reactionTime, scoreP1, scoreP2);
+        }
 
-      data[3] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[2] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[1] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[0] = display.encodeDigit(currtime % 10);
-      display.setBrightness(0x01);
-      display.setSegments(data);
+        scoreP1++;
+        p1Total += reactionTime;
+        finished_players[0] = 1;
+      }
 
-      between(timebetween);
-      break;
+      if (digitalRead(switch_p2) && finished_players[1] == 0)
+      {
+        if(finished_players[0] == 0)
+        {
+          digitalWrite(led_p2, HIGH);
+          digitalWrite(led_p1, LOW);
+          updateDisplay(reactionTime, scoreP1, scoreP2);
+        }
+
+        scoreP2++;
+        p2Total += reactionTime;
+        finished_players[1] = 1;
+      }
+
+      if (reactionTime > 9999)
+      {
+        updateDisplay(9999, scoreP1, scoreP2);
+
+        digitalWrite(led_p1, LOW);
+        digitalWrite(led_p2, LOW);
+
+        stop = 1;
+        active_delay(timebetween);
+      }
+
+      if(finished_players[0] && finished_players[1])
+      {
+        stop = 1;
+        active_delay(timebetween);
+      }
+
+      delay(1);
+      reactionTime++;
     }
-
-    if (digitalRead(switch2) == LOW)
-    {
-      digitalWrite(led2, HIGH);
-      digitalWrite(led1, LOW);
-
-      data[3] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[2] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[1] = display.encodeDigit(currtime % 10);
-      currtime /= 10;
-      data[0] = display.encodeDigit(currtime % 10);
-      display.setBrightness(0x01);
-      display.setSegments(data);
-
-      between(timebetween);
-      break;
-    }
-    if (currtime > 9999)
-    {
-      data[3] = display.encodeDigit(9);
-      data[2] = display.encodeDigit(9);
-      data[1] = display.encodeDigit(9);
-      data[0] = display.encodeDigit(9);
-      display.setSegments(data);
-      digitalWrite(led1, LOW);
-      digitalWrite(led2, LOW);
-
-      between(timebetween);
-      break;
-    }
-    delay(1);
-    currtime++;
   }
+  digitalWrite(led_avg, HIGH);
+
+  //p1 average
+  digitalWrite(led_p1, HIGH);
+  digitalWrite(led_p2, LOW);
+  updateDisplay(p1Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+
+  active_delay(timebetween);
+
+  //p2 average
+  digitalWrite(led_p1, LOW);
+  digitalWrite(led_p2, HIGH);
+  updateDisplay(p2Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+
+  active_delay(timebetween);
+  digitalWrite(led_avg, LOW);
 }
