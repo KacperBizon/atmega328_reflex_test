@@ -16,6 +16,7 @@ const byte led_score_p2[] = {11, 12, 13}; //player 2 score LEDs
 
 const byte led_avg =  14;                 //avg score LED
 const byte led_stop = 15;                 //game stop LED
+const byte multiplayer_switch = 16;
 
 const byte blink_count = 5;               //initial blinks
 const int timebetween = 1000;             //time between games
@@ -82,7 +83,7 @@ void updateDisplay(int value, int scoreP1, int scoreP2)
 
 void setup() 
 {
-  randomSeed(analogRead(2));
+  randomSeed(analogRead(3));
 
   pinMode(switch_p1, INPUT_PULLUP);
   pinMode(switch_p2, INPUT_PULLUP);
