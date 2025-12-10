@@ -6,6 +6,7 @@
 #define CLK 2
 #define DIO 3
 TM1637Display display(CLK, DIO);
+uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
 
 const byte switch_p1 = 4;                 //player 1 switch
 const byte switch_p2 = 5;                 //player 2 switch
@@ -16,12 +17,17 @@ const byte led_score_p2[] = {11, 12, 13}; //player 2 score LEDs
 
 const byte led_avg =  14;                 //avg score LED
 const byte led_stop = 15;                 //game stop LED
-const byte multiplayer_switch = 16;
+const byte multiplayer_switch = 16;       //multiplayer if HIGH
 
+const byte MAX_SCORE = 3;
 const byte blink_count = 5;               //initial blinks
 const int timebetween = 1000;             //time between games
 
-uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
+byte multiplayer = 1;
+unsigned long p1Total = 0;
+unsigned long p2Total = 0;
+byte scoreP1 = 0;
+byte scoreP2 = 0;
 
 void active_delay(int time)
 {
@@ -51,8 +57,14 @@ void blinkMainLEDs()
   }
 }
 
-void updateDisplay(int value, int scoreP1, int scoreP2)
+void updateDisplay(unsigned long value, int scoreP1, int scoreP2)
 {
+  for (int i = 0; i < MAX_SCORE; i++)
+  {
+    digitalWrite(led_score_p1[i], LOW);
+    digitalWrite(led_score_p2[i], LOW);
+  }
+
   for (int i = 0; i < scoreP1; i++)
   {
     digitalWrite(led_score_p1[i], HIGH);
@@ -63,12 +75,14 @@ void updateDisplay(int value, int scoreP1, int scoreP2)
     digitalWrite(led_score_p2[i], HIGH);
   }
 
-  if(value == -1)
+  if(value == 0)
   {
     display.clear();
     return;
   }
 
+  value /= 1000;
+  
   data[3] = display.encodeDigit(value % 10);
   value /= 10;
   data[2] = display.encodeDigit(value % 10);
@@ -81,6 +95,139 @@ void updateDisplay(int value, int scoreP1, int scoreP2)
   display.setSegments(data);
 }
 
+void displayAverage(unsigned long p1Total, unsigned long p2Total, byte scoreP1, byte scoreP2)
+{
+  digitalWrite(led_avg, HIGH);
+
+  //p1 average
+  if(p1Total > 0)
+  {
+    digitalWrite(led_p1, HIGH);
+    digitalWrite(led_p2, LOW);
+    updateDisplay(p1Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+
+    active_delay(timebetween);
+  }
+
+  //p2 average
+  if(p2Total > 0)
+  {
+    digitalWrite(led_p1, LOW);
+    digitalWrite(led_p2, HIGH);
+    updateDisplay(p2Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+
+    active_delay(timebetween);
+  }
+
+  digitalWrite(led_avg, LOW);
+}
+
+bool falseStart()
+{
+  unsigned long waitTime = random(3200, 7200) * 1000;
+  unsigned long startTime = micros();
+
+  while (micros() - startTime < waitTime)
+  {
+    if ((digitalRead(switch_p1) == LOW) || (digitalRead(switch_p2) == LOW))
+    {
+      data[3] = display.encodeDigit(15);
+      data[2] = display.encodeDigit(15);
+      data[1] = display.encodeDigit(15);
+      data[0] = display.encodeDigit(15);
+      display.setBrightness(0x01);
+      display.setSegments(data);
+
+      digitalWrite(led_stop, HIGH);
+
+      active_delay(timebetween);
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+void reflexTest()
+{
+  bool finished_players[2]={0, 0};
+  digitalWrite(led_p1, HIGH);
+  digitalWrite(led_p2, HIGH);
+
+  unsigned long startTime = micros();
+  unsigned long reactionTime = 0;
+
+  while(finished_players[0] == 0 && finished_players[1] == 0)
+  {
+    //calculate time after falsestart()
+    reactionTime = micros() - startTime;
+
+    //player 1
+    if (digitalRead(switch_p1) == LOW && finished_players[0] == 0)
+    {
+      if(finished_players[1] == 0)
+      {
+        digitalWrite(led_p1, HIGH);
+        digitalWrite(led_p2, LOW);
+        scoreP1++;
+        updateDisplay(reactionTime, scoreP1, scoreP2);
+      }
+
+      p1Total += reactionTime;
+      finished_players[0] = 1;
+
+      if(multiplayer == 1)
+        return;
+    }
+
+    //player 2
+    if (digitalRead(switch_p2) == LOW && finished_players[1] == 0)
+    {
+      if(finished_players[0] == 0)
+      {
+        digitalWrite(led_p1, LOW);
+        digitalWrite(led_p2, HIGH);
+        scoreP2++;
+        updateDisplay(reactionTime, scoreP1, scoreP2);
+      }
+
+      p2Total += reactionTime;
+      finished_players[1] = 1;
+
+      if(multiplayer == 1)
+        return;
+    }
+
+    if (reactionTime > 9990000)
+    {
+      updateDisplay(9999000, scoreP1, scoreP2);
+
+      digitalWrite(led_p1, LOW);
+      digitalWrite(led_p2, LOW);
+
+      if(finished_players[0] == 0)
+        p1Total += reactionTime;
+
+      if(finished_players[1] == 0)
+        p2Total += reactionTime;
+
+      return;
+    }
+  }
+}
+
+void handleGame()
+{
+  display.clear();
+  digitalWrite(led_p1, LOW);
+  digitalWrite(led_p2, LOW);
+
+  if (falseStart() == 0)
+    reflexTest();
+
+  active_delay(timebetween);
+}
+
 void setup() 
 {
   randomSeed(analogRead(3));
@@ -91,13 +238,9 @@ void setup()
   pinMode(led_p1, OUTPUT);
   pinMode(led_p2, OUTPUT);
 
-  for (int i = 0; i < sizeof(led_score_p1) / sizeof(led_score_p1[0]); i++) 
+  for (int i = 0; i < MAX_SCORE; i++) 
   {
     pinMode(led_score_p1[i], OUTPUT);
-  }
-
-  for (int i = 0; i < sizeof(led_score_p2) / sizeof(led_score_p2[0]); i++) 
-  {
     pinMode(led_score_p2[i], OUTPUT);
   }
 
@@ -109,115 +252,18 @@ void setup()
 
 void loop()
 {
-  int p1Total = 0;
-  int p2Total = 0;
+  p1Total = 0;
+  p2Total = 0;
+  scoreP1 = 0;
+  scoreP2 = 0;
+  updateDisplay(0, scoreP1, scoreP2);
 
-  byte scoreP1 = 0;
-  byte scoreP2 = 0;
-  updateDisplay(-1, scoreP1, scoreP2);
+  multiplayer = digitalRead(multiplayer_switch);
 
-  while(scoreP1 <= 2 || scoreP2 <=2)
+  while(scoreP1 < MAX_SCORE && scoreP2 < MAX_SCORE)
   {
-    display.clear();
-    digitalWrite(led_p1, LOW);
-    digitalWrite(led_p2, LOW);
-
-    int timeToStart = random(3200, 7200);
-    int reactionTime = 0;
-    bool stop = 0;
-    bool finished_players[2]={0, 0};
-
-    while(timeToStart)
-    {
-      delay(1);
-      timeToStart--;
-
-      if ((digitalRead(switch_p1) == LOW) || (digitalRead(switch_p2) == LOW))
-      {
-        data[3] = display.encodeDigit(15);
-        data[2] = display.encodeDigit(15);
-        data[1] = display.encodeDigit(15);
-        data[0] = display.encodeDigit(15);
-        display.setBrightness(0x01);
-        display.setSegments(data);
-
-        digitalWrite(led_stop, HIGH);
-
-        stop = 1;
-        timeToStart = 0;
-        active_delay(timebetween);
-      }
-    }
-
-    digitalWrite(led_p1, HIGH);
-    digitalWrite(led_p2, HIGH);
-
-    //main reflex test
-    while (!stop)
-    {
-      if (digitalRead(switch_p1) == LOW && finished_players[0] == 0)
-      {
-        if(finished_players[1] == 0)
-        {
-          digitalWrite(led_p1, HIGH);
-          digitalWrite(led_p2, LOW);
-          updateDisplay(reactionTime, scoreP1, scoreP2);
-        }
-
-        scoreP1++;
-        p1Total += reactionTime;
-        finished_players[0] = 1;
-      }
-
-      if (digitalRead(switch_p2) && finished_players[1] == 0)
-      {
-        if(finished_players[0] == 0)
-        {
-          digitalWrite(led_p2, HIGH);
-          digitalWrite(led_p1, LOW);
-          updateDisplay(reactionTime, scoreP1, scoreP2);
-        }
-
-        scoreP2++;
-        p2Total += reactionTime;
-        finished_players[1] = 1;
-      }
-
-      if (reactionTime > 9999)
-      {
-        updateDisplay(9999, scoreP1, scoreP2);
-
-        digitalWrite(led_p1, LOW);
-        digitalWrite(led_p2, LOW);
-
-        stop = 1;
-        active_delay(timebetween);
-      }
-
-      if(finished_players[0] && finished_players[1])
-      {
-        stop = 1;
-        active_delay(timebetween);
-      }
-
-      delay(1);
-      reactionTime++;
-    }
+    handleGame();
   }
-  digitalWrite(led_avg, HIGH);
 
-  //p1 average
-  digitalWrite(led_p1, HIGH);
-  digitalWrite(led_p2, LOW);
-  updateDisplay(p1Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
-
-  active_delay(timebetween);
-
-  //p2 average
-  digitalWrite(led_p1, LOW);
-  digitalWrite(led_p2, HIGH);
-  updateDisplay(p2Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
-
-  active_delay(timebetween);
-  digitalWrite(led_avg, LOW);
+  displayAverage(p1Total, p2Total, scoreP1, scoreP2);
 }
