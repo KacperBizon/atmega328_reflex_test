@@ -99,24 +99,49 @@ void displayAverage(unsigned long p1Total, unsigned long p2Total, byte scoreP1, 
 {
   digitalWrite(led_avg, HIGH);
 
-  //p1 average
-  if(p1Total > 0)
+  if(multiplayer == 1)
   {
-    digitalWrite(led_p1, HIGH);
-    digitalWrite(led_p2, LOW);
-    updateDisplay(p1Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+    //p1 average
+    if(p1Total > 0)
+    {
+      digitalWrite(led_p1, HIGH);
+      digitalWrite(led_p2, LOW);
+      updateDisplay(p1Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
 
-    active_delay(timebetween);
+      active_delay(timebetween);
+    }
+
+    //p2 average
+    if(p2Total > 0)
+    {
+      digitalWrite(led_p1, LOW);
+      digitalWrite(led_p2, HIGH);
+      updateDisplay(p2Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+
+      active_delay(timebetween);
+    }
   }
-
-  //p2 average
-  if(p2Total > 0)
+  else //singleplayer
   {
-    digitalWrite(led_p1, LOW);
-    digitalWrite(led_p2, HIGH);
-    updateDisplay(p2Total/(scoreP1 + scoreP2), scoreP1, scoreP2);
+    //p1 average
+    if(p1Total > 0)
+    {
+      digitalWrite(led_p1, HIGH);
+      digitalWrite(led_p2, LOW);
+      updateDisplay(p1Total/(scoreP1), scoreP1, scoreP2);
 
-    active_delay(timebetween);
+      active_delay(timebetween);
+    }
+
+    //p2 average
+    if(p2Total > 0)
+    {
+      digitalWrite(led_p1, LOW);
+      digitalWrite(led_p2, HIGH);
+      updateDisplay(p2Total/(scoreP2), scoreP1, scoreP2);
+
+      active_delay(timebetween);
+    }
   }
 
   digitalWrite(led_avg, LOW);
@@ -124,7 +149,7 @@ void displayAverage(unsigned long p1Total, unsigned long p2Total, byte scoreP1, 
 
 bool falseStart()
 {
-  unsigned long waitTime = random(3200, 7200) * 1000;
+  unsigned long waitTime = random(3200, 7200) * 1000UL;
   unsigned long startTime = micros();
 
   while (micros() - startTime < waitTime)
@@ -157,7 +182,7 @@ void reflexTest()
   unsigned long startTime = micros();
   unsigned long reactionTime = 0;
 
-  while(finished_players[0] == 0 && finished_players[1] == 0)
+  while(finished_players[0] == 0 || finished_players[1] == 0)
   {
     //calculate time after falsestart()
     reactionTime = micros() - startTime;
@@ -176,7 +201,7 @@ void reflexTest()
       p1Total += reactionTime;
       finished_players[0] = 1;
 
-      if(multiplayer == 1)
+      if(multiplayer == 0)
         return;
     }
 
@@ -194,16 +219,21 @@ void reflexTest()
       p2Total += reactionTime;
       finished_players[1] = 1;
 
-      if(multiplayer == 1)
+      if(multiplayer == 0)
         return;
     }
 
     if (reactionTime > 9990000)
     {
-      updateDisplay(9999000, scoreP1, scoreP2);
-
       digitalWrite(led_p1, LOW);
       digitalWrite(led_p2, LOW);
+
+      //both players didnt finish - doesnt count 
+      if((finished_players[0] == 0) && (finished_players[1] == 0))
+      {
+        updateDisplay(9999000, scoreP1, scoreP2);
+        return;
+      }
 
       if(finished_players[0] == 0)
         p1Total += reactionTime;
@@ -246,6 +276,7 @@ void setup()
 
   pinMode(led_avg, OUTPUT);
   pinMode(led_stop, OUTPUT);
+  pinMode(multiplayer_switch, INPUT_PULLUP);
 
   blinkMainLEDs();
 }
