@@ -8,10 +8,11 @@
 TM1637Display display(CLK, DIO);
 uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
 
-const byte switch_p1 = 4;                 //player 1 switch
+const byte led_p2 = 4;                    //player 2 main LED
 const byte switch_p2 = 5;                 //player 2 switch
 const byte led_p1 = 6;                    //player 1 main LED
-const byte led_p2 = 7;                    //player 2 main LED
+const byte switch_p1 = 7;                 //player 1 switch
+
 const byte led_score_p1[] = {8, 9, 10};   //player 1 score LEDs
 const byte led_score_p2[] = {11, 12, 13}; //player 2 score LEDs
 
