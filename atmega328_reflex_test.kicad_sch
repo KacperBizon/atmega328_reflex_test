@@ -6319,7 +6319,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "b109d5cb-1820-47fb-8988-ceb2791a4b37")
-		(property "Reference" "U3"
+		(property "Reference" "U2"
 			(at 73.66 52.07 0)
 			(show_name yes)
 			(effects
@@ -6377,7 +6377,7 @@
 		(instances
 			(project ""
 				(path "/91926390-6ee2-4f94-b466-10e7c61b1308"
-					(reference "U3")
+					(reference "U2")
 					(unit 1)
 				)
 			)
@@ -6958,7 +6958,7 @@
 				)
 			)
 		)
-		(property "Value" "slide_switch"
+		(property "Value" "MULTIPLAYER"
 			(at 208.28 104.14 0)
 			(effects
 				(font
