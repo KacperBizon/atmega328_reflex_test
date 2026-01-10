@@ -150,24 +150,28 @@ void displayAverage(unsigned long p1Total, unsigned long p2Total, byte scoreP1, 
 
 bool falseStart()
 {
-  unsigned long waitTime = random(3200, 7200) * 1000UL;
+  unsigned long waitTime = random(3200, 7600) * 1000UL;
+  unsigned long safeZone = 1000000UL;
   unsigned long startTime = micros();
 
   while (micros() - startTime < waitTime)
   {
-    if ((digitalRead(switch_p1) == LOW) || (digitalRead(switch_p2) == LOW))
+    if (micros() - startTime > safeZone)
     {
-      data[3] = display.encodeDigit(15);
-      data[2] = display.encodeDigit(15);
-      data[1] = display.encodeDigit(15);
-      data[0] = display.encodeDigit(15);
-      display.setBrightness(0x01);
-      display.setSegments(data);
+      if ((digitalRead(switch_p1) == LOW) || (digitalRead(switch_p2) == LOW))
+      {
+        data[3] = display.encodeDigit(15);
+        data[2] = display.encodeDigit(15);
+        data[1] = display.encodeDigit(15);
+        data[0] = display.encodeDigit(15);
+        display.setBrightness(0x01);
+        display.setSegments(data);
 
-      digitalWrite(led_stop, HIGH);
+        digitalWrite(led_stop, HIGH);
 
-      active_delay(timebetween);
-      return 1;
+        active_delay(timebetween);
+        return 1;
+      }
     }
   }
 
