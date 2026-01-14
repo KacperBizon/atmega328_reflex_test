@@ -6,8 +6,8 @@
 - To go to the next round press any button for 1s
 - Singleplayer - the game finishes with first keypress, multiplayer - both players need to press the keys to finish round 
 ### Components
-- R1 - 10K - reset pullup
-- R2-R11 - recommended 3.3k-5.6k
-- C1,C1 - 22pF
+- R1 - 10K
+- R2-R11 - recommended 3.3k-6.8k
+- C1,C2 - 22pF
 - C3,C4,C5 - 100nF
 - C6 - 10uF

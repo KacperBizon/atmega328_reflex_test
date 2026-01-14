@@ -4029,7 +4029,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 182.88 73.66 90)
 			(effects
 				(font
@@ -4306,7 +4306,7 @@
 				)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "3k3"
 			(at 201.93 121.92 90)
 			(effects
 				(font
@@ -4723,14 +4723,14 @@
 		(dnp no)
 		(uuid "3591dcab-d0e9-423c-b563-2e211aeb650e")
 		(property "Reference" "R7"
-			(at 201.93 82.296 90)
+			(at 201.93 77.978 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 201.93 76.2 90)
 			(effects
 				(font
@@ -4992,14 +4992,14 @@
 		(dnp no)
 		(uuid "41124ed3-5062-4168-a995-9d8449872cc8")
 		(property "Reference" "R5"
-			(at 201.93 77.216 90)
+			(at 201.93 72.898 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 201.93 71.12 90)
 			(effects
 				(font
@@ -5461,7 +5461,7 @@
 		(dnp no)
 		(uuid "6c56bf30-681d-4ef6-a767-cf67b680a02e")
 		(property "Reference" "D8"
-			(at 212.09 87.63 0)
+			(at 212.09 82.804 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5912,7 +5912,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 182.88 91.44 90)
 			(effects
 				(font
@@ -6190,7 +6190,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 201.93 93.98 90)
 			(effects
 				(font
@@ -6258,7 +6258,7 @@
 				)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "3k3"
 			(at 182.88 127 90)
 			(effects
 				(font
@@ -6400,7 +6400,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 182.88 68.58 90)
 			(effects
 				(font
@@ -6529,7 +6529,7 @@
 		(dnp no)
 		(uuid "c605c86d-60aa-498d-82d3-7efe515054b6")
 		(property "Reference" "D4"
-			(at 212.09 77.47 0)
+			(at 212.09 72.644 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6672,7 +6672,7 @@
 		(dnp no)
 		(uuid "d16f2c73-418b-418d-a94e-65ed5290857b")
 		(property "Reference" "D6"
-			(at 212.09 82.55 0)
+			(at 212.09 77.724 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7021,14 +7021,14 @@
 		(dnp no)
 		(uuid "e1fdb025-71f2-4701-bcc1-2ebbefbc8a63")
 		(property "Reference" "R9"
-			(at 201.93 87.376 90)
+			(at 201.93 83.058 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 201.93 81.28 90)
 			(effects
 				(font
@@ -7238,7 +7238,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 182.88 78.74 90)
 			(effects
 				(font

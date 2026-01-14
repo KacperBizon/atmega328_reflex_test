@@ -419,7 +419,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 1.27 2.96 90)
+			(at 1.27 3.5 180)
 			(layer "F.Fab")
 			(uuid "e025ef66-30c8-40a8-83dd-3f7d792ecaf2")
 			(effects
@@ -833,7 +833,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 3.81 2.37 90)
 			(layer "F.Fab")
 			(uuid "2ff5df6b-31b7-4ba9-8dee-28a19edeaf14")
@@ -1936,7 +1936,7 @@
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R1"
-			(at -0.13 2.5 0)
+			(at 3.8 2.4 0)
 			(layer "F.SilkS")
 			(uuid "790ea638-efb3-4207-a1da-b7165495180b")
 			(effects
@@ -1947,7 +1947,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 3.81 2.37 0)
+			(at 0.32 2.37 0)
 			(layer "F.Fab")
 			(uuid "0ec4403c-3fb2-4611-806d-8d6741d2f25a")
 			(effects
@@ -2391,7 +2391,7 @@
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R10"
-			(at 7.5 -2.5 0)
+			(at 3.8 -2.4 0)
 			(layer "F.SilkS")
 			(uuid "d416b730-19ce-4eb2-999c-b51c8bbc1fdd")
 			(effects
@@ -2401,8 +2401,8 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
-			(at 4 -2.5 0)
+		(property "Value" "5k1"
+			(at 7.3 -2.4 0)
 			(layer "F.Fab")
 			(uuid "3d582114-d08a-42d5-8462-b97ef415f6e9")
 			(effects
@@ -3480,7 +3480,7 @@
 		(descr "Wuerth, WS-SLTV, 450301014042, https://www.we-online.com/components/products/datasheet/450301014042.pdf")
 		(tags "switch single-pole opposite-side-connection double-throw SPDT würth wurth")
 		(property "Reference" "SW3"
-			(at -3 -3.1 0)
+			(at -3.1 -3 0)
 			(layer "F.SilkS")
 			(uuid "9f88d107-5754-4d5e-94ae-8622676f67e0")
 			(effects
@@ -3491,7 +3491,7 @@
 			)
 		)
 		(property "Value" "MULTIPLAYER"
-			(at 0 -3 0)
+			(at 0.1 4.6 0)
 			(layer "F.Fab")
 			(uuid "bcc6e04c-50f7-41c4-b6c2-282578992577")
 			(effects
@@ -3566,7 +3566,7 @@
 			(uuid "14477eb0-43ce-415a-a757-518178c97462")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 -4 0)
+			(at 2.9 -3 0)
 			(layer "F.Fab")
 			(uuid "249a53f8-a12b-498f-b567-6aac89850f96")
 			(effects
@@ -4363,7 +4363,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 1.27 2.96 90)
+			(at 1 3.7 180)
 			(layer "F.Fab")
 			(uuid "16d78eaf-f6a7-4a31-8798-ebcddf675509")
 			(effects
@@ -4915,7 +4915,7 @@
 			(uuid "e9d990ac-9413-4fb4-ab6c-2ab25f944534")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 34.5 14 270)
+			(at 0.06 6.8 0)
 			(layer "F.Fab")
 			(uuid "0542d4c9-402b-45f8-a304-13930c110cd3")
 			(effects
@@ -5114,7 +5114,7 @@
 		(descr "CP, Radial series, Radial, pin pitch=3.80mm, diameter=8mm, height=14mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 3.80mm diameter 8mm height 14mm Electrolytic Capacitor")
 		(property "Reference" "C6"
-			(at -1.197349 -4.5 0)
+			(at -1.2 -4.5 0)
 			(layer "F.SilkS")
 			(uuid "8c5758d8-3365-4d24-985d-aa25ac38973f")
 			(effects
@@ -5125,7 +5125,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 1.9 5.25 0)
+			(at 5.6 -4.5 0)
 			(layer "F.Fab")
 			(uuid "5e54aee4-fa89-455a-81e8-9d178f0c4d2e")
 			(effects
@@ -7386,7 +7386,7 @@
 				)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "3k3"
 			(at 3.81 2.37 0)
 			(layer "F.Fab")
 			(uuid "4db35cf0-67da-4134-abab-b36fd8cf1735")
@@ -7589,7 +7589,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 3.81 2.37 90)
 			(layer "F.Fab")
 			(uuid "ef35b53b-86f2-4436-8242-54e1a4d34eaa")
@@ -7792,7 +7792,7 @@
 				)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "3k3"
 			(at 3.75 -2.25 0)
 			(layer "F.Fab")
 			(uuid "88e2982e-5c17-416b-82b3-11d23409cfa3")
@@ -7995,7 +7995,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 3.81 2.37 90)
 			(layer "F.Fab")
 			(uuid "4966bdb9-b090-4277-bc53-bd52a8ef2e32")
@@ -8416,7 +8416,7 @@
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R11"
-			(at 7.5 -2.5 0)
+			(at 3.8 -2.4 0)
 			(layer "F.SilkS")
 			(uuid "8a6c81d6-6aa9-4836-9685-b49dddf96e44")
 			(effects
@@ -8426,8 +8426,8 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
-			(at 3.5 -2.5 0)
+		(property "Value" "5k1"
+			(at 7.4 -2.4 0)
 			(layer "F.Fab")
 			(uuid "46ab7f71-5408-4211-a97e-ad43d4758310")
 			(effects
@@ -9124,7 +9124,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 3.81 2.37 90)
 			(layer "F.Fab")
 			(uuid "eb14199e-b7e8-4d42-9ac6-2e709ae457a8")
@@ -9327,7 +9327,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 3.81 2.37 90)
 			(layer "F.Fab")
 			(uuid "11f90408-91bc-497a-82d2-64fd7376fdc1")
@@ -9782,7 +9782,7 @@
 				)
 			)
 		)
-		(property "Value" "6k8"
+		(property "Value" "5k1"
 			(at 3.81 2.37 90)
 			(layer "F.Fab")
 			(uuid "8131e01c-f0c1-4e4a-9724-b0fb93fec747")
